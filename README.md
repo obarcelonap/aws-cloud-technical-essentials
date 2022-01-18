@@ -17,6 +17,18 @@ aws-cloud-technical-essentials/infra/env
 $ terraform apply
 ```
 
+The output `employee_directory_app_instance_private_key` is exposed to get the private key to connect to the ec2 instance
+```shell
+aws-cloud-technical-essentials/infra/env
+$ terraform output -raw employee_directory_app_instance_private_key > employee_directory_app_instance_private_key.pem
+```
+
+The output `employee_directory_instance_public_ip` is exposed to connect to ec2 instance
+```shell
+aws-cloud-technical-essentials/infra/env
+$  ssh -i employee_directory_app_instance_private_key.pem ec2-user@<employee_directory_instance_public_ip>
+```
+
 ## Tips
 
 Default VPC not created for the region:
