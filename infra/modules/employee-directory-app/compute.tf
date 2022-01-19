@@ -77,8 +77,8 @@ resource "aws_instance" "employee_directory_app" {
   pip3 install -r requirements.txt
   amazon-linux-extras install epel
   yum -y install stress
-  export PHOTOS_BUCKET=$${SUB_PHOTOS_BUCKET}
-  export AWS_DEFAULT_REGION=us-east-1
+  export PHOTOS_BUCKET=${aws_s3_bucket.employee_directory_app_photo_bucket.bucket}
+  export AWS_DEFAULT_REGION=${data.aws_region.current.name}
   export DYNAMO_MODE=on
   FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80
 EOF
