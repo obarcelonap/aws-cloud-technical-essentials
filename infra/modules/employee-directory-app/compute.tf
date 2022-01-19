@@ -64,7 +64,7 @@ resource "aws_instance" "employee_directory_app" {
 
   key_name                    = aws_key_pair.employee_directory_app_key_pair.key_name
   iam_instance_profile        = aws_iam_instance_profile.employee_directory_app_profile.name
-  subnet_id                   = aws_subnet.employee_directory_app_public_subnet_use1_az1.id
+  subnet_id                   = aws_subnet.employee_directory_app_public_subnet_az1.id
   vpc_security_group_ids      = [aws_security_group.employee_directory_app_web_security_group.id]
   associate_public_ip_address = true
 

@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "employee_directory_app_photo_bucket" {
   bucket = "employee-photo-bucket-ob-024"
+  force_destroy = true
 
   tags = {
     name = "employee_directory_app_photo_bucket"
@@ -29,5 +30,21 @@ data "aws_iam_policy_document" "employee_directory_app_photo_bucket_policy_data"
       aws_s3_bucket.employee_directory_app_photo_bucket.arn,
       "${aws_s3_bucket.employee_directory_app_photo_bucket.arn}/*",
     ]
+  }
+}
+
+resource "aws_dynamodb_table" "employee_directory_app_employees_table" {
+  name           = "Employees"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  tags = {
+    name = "employee_directory_app_employee_table"
   }
 }
