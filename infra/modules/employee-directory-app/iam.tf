@@ -15,7 +15,7 @@ resource "aws_iam_role" "ec2_s3_dynamodb_full_access_role" {
   })
 
   tags = {
-    name = "employee-directory-app"
+    name = "employee-directory-app-full-access-role"
   }
 }
 

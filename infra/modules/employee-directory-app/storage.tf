@@ -1,9 +1,9 @@
 resource "aws_s3_bucket" "employee_directory_app_photo_bucket" {
-  bucket = "employee-photo-bucket-ob-024"
+  bucket        = "employee-photo-bucket-ob-024"
   force_destroy = true
 
   tags = {
-    name = "employee_directory_app_photo_bucket"
+    name = "employee-directory-app-photo-bucket"
   }
 }
 
@@ -45,6 +45,6 @@ resource "aws_dynamodb_table" "employee_directory_app_employees_table" {
   }
 
   tags = {
-    name = "employee_directory_app_employee_table"
+    name = "employee-directory-app-employee-table"
   }
 }

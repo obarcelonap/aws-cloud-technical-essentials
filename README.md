@@ -17,17 +17,21 @@ aws-cloud-technical-essentials/infra/env
 $ terraform apply
 ```
 
-The output `employee_directory_app_instance_private_key` is exposed to get the private key to connect to the ec2 instance
+To receive autoscaling notifications through email provide `autoscaling_notification_emails` var through command line:
+```shell
+aws-cloud-technical-essentials/infra/env
+$ terraform apply -var='autoscaling_notification_emails=["foo@bar.com"]'
+```
+This will create additional SNS topic to send the emails and subscribe the provided emails to it.
+
+The output `employee_directory_app_instance_private_key` is exposed to get the private key to connect to the ec2 instances:
 ```shell
 aws-cloud-technical-essentials/infra/env
 $ terraform output -raw employee_directory_app_instance_private_key > employee_directory_app_instance_private_key.pem
+$ ssh -i employee_directory_app_instance_private_key.pem ec2-user@<employee_directory_instance_public_ip>
 ```
 
-The output `employee_directory_instance_public_ip` is exposed to connect to ec2 instance
-```shell
-aws-cloud-technical-essentials/infra/env
-$  ssh -i employee_directory_app_instance_private_key.pem ec2-user@<employee_directory_instance_public_ip>
-```
+The output `employee_directory_dns_name` is exposed to connect to the employee directory app through the load balancer
 
 ## Tips
 

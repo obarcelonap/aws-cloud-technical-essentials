@@ -2,7 +2,7 @@ resource "aws_vpc" "employee_directory_app_vpc" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    name = "employee_directory_app_vpc"
+    name = "employee-directory-app-vpc"
   }
 }
 
@@ -10,7 +10,7 @@ resource "aws_internet_gateway" "employee_directory_app_igw" {
   vpc_id = aws_vpc.employee_directory_app_vpc.id
 
   tags = {
-    name = "employee_directory_app_igw"
+    name = "employee-directory-app-igw"
   }
 }
 
@@ -23,7 +23,7 @@ resource "aws_route_table" "employee_directory_app_route_table_public" {
   }
 
   tags = {
-    name = "employee_directory_app_route_table_public"
+    name = "employee-directory-app-route-table-public"
   }
 }
 
@@ -31,7 +31,7 @@ resource "aws_route_table" "employee_directory_app_route_table_private" {
   vpc_id = aws_vpc.employee_directory_app_vpc.id
 
   tags = {
-    name = "employee_directory_app_route_table_private"
+    name = "employee-directory-app-route-table-private"
   }
 }
 
@@ -54,7 +54,7 @@ resource "aws_subnet" "employee_directory_app_public_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    name = "employee_directory_app_public_subnet_${data.aws_availability_zones.available.zone_ids[count.index]}"
+    name = "employee-directory-app-public-subnet-${data.aws_availability_zones.available.zone_ids[count.index]}"
   }
 }
 
@@ -74,7 +74,7 @@ resource "aws_subnet" "employee_directory_app_private_subnet" {
   cidr_block        = "10.0.${(count.index * 2) + 1}.0/24"
 
   tags = {
-    name = "employee_directory_app_private_subnet_${data.aws_availability_zones.available.zone_ids[count.index]}"
+    name = "employee-directory-app-private-subnet-${data.aws_availability_zones.available.zone_ids[count.index]}"
   }
 }
 
