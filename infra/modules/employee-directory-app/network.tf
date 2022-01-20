@@ -35,66 +35,52 @@ resource "aws_route_table" "employee_directory_app_route_table_private" {
   }
 }
 
-# Setup for first az
-resource "aws_subnet" "employee_directory_app_public_subnet_az1" {
+variable "number_of_az" {
+  description = "The amount of availability zones to setup in the region. Each az will have a public subnet and a private subnet. The value Should be greater than 0 and smaller than the number of az in the region."
+  type        = number
+  default     = 2
+  validation {
+    condition     = var.number_of_az > 0
+    error_message = "The number_of_az value must be greater than 0."
+  }
+}
+
+resource "aws_subnet" "employee_directory_app_public_subnet" {
+  count = var.number_of_az
+
   vpc_id                  = aws_vpc.employee_directory_app_vpc.id
-  availability_zone       = data.aws_availability_zones.available.names[0]
-  cidr_block              = "10.0.1.0/24"
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  cidr_block              = "10.0.${count.index * 2}.0/24"
   map_public_ip_on_launch = true
 
   tags = {
-    name = "employee_directory_app_public_subnet_${data.aws_availability_zones.available.zone_ids[0]}"
+    name = "employee_directory_app_public_subnet_${data.aws_availability_zones.available.zone_ids[count.index]}"
   }
 }
 
-resource "aws_route_table_association" "employee_directory_app_route_table_association_public_az1" {
-  subnet_id      = aws_subnet.employee_directory_app_public_subnet_az1.id
+resource "aws_route_table_association" "employee_directory_app_public_route_table_association" {
+  count = var.number_of_az
+
+  subnet_id      = aws_subnet.employee_directory_app_public_subnet[count.index].id
   route_table_id = aws_route_table.employee_directory_app_route_table_public.id
 }
 
-resource "aws_subnet" "employee_directory_app_private_subnet_az1" {
+
+resource "aws_subnet" "employee_directory_app_private_subnet" {
+  count = var.number_of_az
+
   vpc_id            = aws_vpc.employee_directory_app_vpc.id
-  availability_zone = data.aws_availability_zones.available.names[0]
-  cidr_block        = "10.0.3.0/24"
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  cidr_block        = "10.0.${(count.index * 2) + 1}.0/24"
 
   tags = {
-    name = "employee_directory_app_private_subnet_${data.aws_availability_zones.available.zone_ids[0]}"
+    name = "employee_directory_app_private_subnet_${data.aws_availability_zones.available.zone_ids[count.index]}"
   }
 }
 
-resource "aws_route_table_association" "employee_directory_app_route_table_association_private_az1" {
-  subnet_id      = aws_subnet.employee_directory_app_private_subnet_az1.id
-  route_table_id = aws_route_table.employee_directory_app_route_table_private.id
-}
+resource "aws_route_table_association" "employee_directory_app_private_route_table_association" {
+  count = var.number_of_az
 
-# Setup for second az
-resource "aws_subnet" "employee_directory_app_public_subnet_az2" {
-  vpc_id                  = aws_vpc.employee_directory_app_vpc.id
-  availability_zone       = data.aws_availability_zones.available.names[1]
-  cidr_block              = "10.0.2.0/24"
-  map_public_ip_on_launch = true
-
-  tags = {
-    name = "employee_directory_app_public_subnet_${data.aws_availability_zones.available.zone_ids[1]}"
-  }
-}
-
-resource "aws_route_table_association" "employee_directory_app_route_table_association_public_az2" {
-  subnet_id      = aws_subnet.employee_directory_app_public_subnet_az2.id
-  route_table_id = aws_route_table.employee_directory_app_route_table_public.id
-}
-
-resource "aws_subnet" "employee_directory_app_private_subnet_az2" {
-  vpc_id            = aws_vpc.employee_directory_app_vpc.id
-  availability_zone = data.aws_availability_zones.available.names[1]
-  cidr_block        = "10.0.4.0/24"
-
-  tags = {
-    name = "employee_directory_app_private_subnet_${data.aws_availability_zones.available.zone_ids[1]}"
-  }
-}
-
-resource "aws_route_table_association" "employee_directory_app_route_table_association_private_az2" {
-  subnet_id      = aws_subnet.employee_directory_app_private_subnet_az2.id
+  subnet_id      = aws_subnet.employee_directory_app_private_subnet[count.index].id
   route_table_id = aws_route_table.employee_directory_app_route_table_private.id
 }
